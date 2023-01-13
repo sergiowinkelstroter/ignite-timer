@@ -19,4 +19,4 @@ Após iniciar o Timer, a tarefa ficará no histórico para que o usuário consig
 
 ## Para visualizar o projeto funcionando, clique no link abaixo !
 
-[Link](ignite-timer-gray.vercel.app)
+[Link](https://ignite-timer-gray.vercel.app/)
