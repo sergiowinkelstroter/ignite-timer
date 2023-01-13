@@ -5,7 +5,7 @@ import {
   useReducer,
   useEffect,
 } from "react";
-import { Cycle, cyclesReducer } from "../reducers/cycles/reducer";
+import { Cycle, CyclesState, cyclesReducer } from "../reducers/cycles/reducer";
 import {
   addNewCycleAction,
   interruptCurrentCycleAction,
@@ -35,23 +35,21 @@ interface CyclesContextType {
 
 export const CyclesContext = createContext({} as CyclesContextType);
 
-export const CyclesProvider = ({ children }: CyclesProviderProps) => {
-  const [cyclesState, dispatch] = useReducer(
-    cyclesReducer,
-    {
-      cycles: [],
-      activeCycleId: null,
-    },
-    () => {
-      const storedStateAsJSON = localStorage.getItem(
-        "@ignite-timer:cycles-state-1.0.0"
-      );
+const initialValue: CyclesState = { cycles: [], activeCycleId: null };
 
-      if (storedStateAsJSON) {
-        return JSON.parse(storedStateAsJSON);
-      }
-    }
+function init(initialValue: CyclesState) {
+  const storedStateAsJSON = localStorage.getItem(
+    "@ignite-timer:cycles-state-1.0.0"
   );
+  if (storedStateAsJSON) {
+    return JSON.parse(storedStateAsJSON);
+  } else {
+    return initialValue;
+  }
+}
+
+export const CyclesProvider = ({ children }: CyclesProviderProps) => {
+  const [cyclesState, dispatch] = useReducer(cyclesReducer, initialValue, init);
 
   const { cycles, activeCycleId } = cyclesState;
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
@@ -66,8 +64,9 @@ export const CyclesProvider = ({ children }: CyclesProviderProps) => {
 
   useEffect(() => {
     const stateJSON = JSON.stringify(cyclesState);
-
-    localStorage.setItem("@ignite-timer:cycles-state-1.0.0", stateJSON);
+    if (cyclesState.cycles.length !== 0) {
+      localStorage.setItem("@ignite-timer:cycles-state-1.0.0", stateJSON);
+    }
   }, [cyclesState]);
 
   function markyCurrentCycleAsFinished() {

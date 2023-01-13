@@ -19,9 +19,9 @@ export const NewCycleForm = () => {
       />
 
       <datalist id="task-suggestions">
-        <option value="Arroz" />
-        <option value="Carne" />
-        <option value="Banana" />
+        <option value="Projeto 01" />
+        <option value="Projeto 02" />
+        <option value="Projeto 03" />
       </datalist>
 
       <label htmlFor="">durante</label>
